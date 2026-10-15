@@ -124,13 +124,13 @@ func fetchItemsInfo() error {
 
 	for _, item := range item.Data.Items {
 		var t string
-		if len(item.Type) == 0 {
-			t = "unknown"
+		if len(item.Type) == 0 || item.Type[0] == "noFlea" {
+			continue
 		} else {
 			t = item.Type[0]
+			itemCount += 1
+			fmt.Printf("ID: %s -> Name: %s -> Type %s\n", item.ID, item.Name, t)
 		}
-		itemCount += 1
-    	fmt.Printf("ID: %s -> Name: %s -> Type %s\n", item.ID, item.Name, t)
 	}
 	
 	fmt.Printf("Items found: %d\n", itemCount)

@@ -58,7 +58,11 @@ func collectItemData() error {
 	}
 
 	for _, item := range item.Data.Items {
-		cacheItem(item.ID, item.Name)
+		if len(item.Type) == 0 || item.Type[0] == "noFlea" {
+			continue
+		} else {
+			cacheItem(item.ID, item.Name)
+		}
 	}
 
 	return nil

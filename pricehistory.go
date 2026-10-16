@@ -147,7 +147,13 @@ func collectTraderData() error {
 
 		for _, trader := range traders.Data {
 			cachedTraders(trader.ID, trader.Name)
+			//fmt is used here to print the trader data to the console for testing purposes.
+			fmt.Printf("ID: %s -> Name: %s\n", trader.ID, trader.Name)
 		}
 
 	return nil
+}
+
+func calculateProfit() {
+	
 }

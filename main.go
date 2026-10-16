@@ -20,19 +20,24 @@ type cliCommand struct {
 
 var commandRegistry = map[string]cliCommand {
 	"kill": {
-		name:        "kill",
-		description: "Exit the scanner",
-		callback:    commandKill,
+		name:        	"kill",
+		description: 	"Exit the scanner",
+		callback:    	commandKill,
 	},
 	"items": {
-		name: "items",
-		description: "Searches for items",
-		callback: fetchItemsInfo,
+		name: 			"items",
+		description:	"Searches for items",
+		callback: 		fetchItemsInfo,
 	},
 	"flea": {
-		name: "flea",
-		description: "Searches for specified item and returns pricing data",
-		callback: fetchItemOnFlea,
+		name: 			"flea",
+		description: 	"Searches for specified item and returns pricing data",
+		callback: 		fetchItemOnFlea,
+	},
+	"test": {
+		name: 			"test",
+		description: 	"Test command",
+		callback: 		collectTraderData,
 	},
 }
 

@@ -16,17 +16,11 @@ type traderCache struct {
 var item_cache itemCache
 var trader_cache traderCache
 
-func cacheItem(id, name string) {
+func cacheItem(item Item) {
 	item_cache.timeCached = time.Now()
-	var newItem Item
-	newItem.ID = id
-	newItem.Name = name
-	item_cache.cachedItems = append(item_cache.cachedItems, newItem)
+	item_cache.cachedItems = append(item_cache.cachedItems, item)
 }
 
-func cachedTraders(id, name string) {
-	var newTrader Trader
-	newTrader.ID = id
-	newTrader.Name = name
-	trader_cache.cachedTraders = append(trader_cache.cachedTraders, newTrader)
+func cachedTraders(trader Trader) {
+	trader_cache.cachedTraders = append(trader_cache.cachedTraders, trader)
 }

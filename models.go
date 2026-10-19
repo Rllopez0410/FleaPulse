@@ -13,7 +13,7 @@ type Item struct {
 	ID   			string 			`json:"id"`
 	Name 			string 			`json:"normalizedName"`
 	Type 			[]string		`json:"types"`	
-	SellToTrader	[]SellToTrader	`json:"selltotraders"`
+	SellToTrader	[]SellToTrader	`json:"sellToTraders"`
 }
 
 type Data struct {

@@ -37,7 +37,7 @@ var commandRegistry = map[string]cliCommand {
 	"test": {
 		name: 			"test",
 		description: 	"Test command",
-		callback: 		collectTraderData,
+		callback: 		showCount,
 	},
 }
 
@@ -56,14 +56,31 @@ func priceSnapShot() {
 	timer := time.NewTicker(2*time.Hour + 10*time.Minute)
 
 	for {
-		<- timer.C
 		collectItemData()
-		collectFleaPrices()
 		if len(trader_cache.cachedTraders) == 0 {
 			collectTraderData()
 		}
+		collectFleaPrices()
+		calculateProfit()
 		//Create a function that will compute the differences of the FLEA and SELL price.
+		<- timer.C
 	}
+}
+
+func profitResults() error {
+	if len(profitibleItems) == 0 {
+		fmt.Printf("Traders cached: %d\n", len(trader_cache.cachedTraders))
+		fmt.Println(len(item_cache.cachedItems))
+
+		fmt.Println("There are no results. Try again later!")
+		return nil
+	}
+
+	for i := 0; i < len(profitibleItems); i++ {
+		fmt.Printf("Name: %s -> Profit: %d\n", profitibleItems[i].name, profitibleItems[i].profit)
+	}
+
+	return nil
 }
 
 func fetchItemOnFlea() error {

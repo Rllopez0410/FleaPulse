@@ -155,5 +155,15 @@ func collectTraderData() error {
 }
 
 func calculateProfit() {
-	
+	for key, value := range priceMap {
+		var averageProfit int
+		
+		for i := 0; i < len(value); i++ {
+			for _, minPrice := range value[i].captured {
+				/*add all the min prices and get the avg. once avg is solved
+				you subtract it from the sell price to see the averageProfit
+				for each item that's on the flea*/
+			}	
+		}
+	} 
 }

@@ -37,7 +37,7 @@ var commandRegistry = map[string]cliCommand {
 	"test": {
 		name: 			"test",
 		description: 	"Test command",
-		callback: 		showCount,
+		callback: 		profitResults,
 	},
 }
 
@@ -69,9 +69,7 @@ func priceSnapShot() {
 
 func profitResults() error {
 	if len(profitibleItems) == 0 {
-		fmt.Printf("Traders cached: %d\n", len(trader_cache.cachedTraders))
 		fmt.Println(len(item_cache.cachedItems))
-
 		fmt.Println("There are no results. Try again later!")
 		return nil
 	}
@@ -111,7 +109,7 @@ func fetchItemOnFlea() error {
 		return err
 	}
 
-	for _, price := range price.Data[len(price.Data)-10:] {
+	for _, price := range price.Data[len(price.Data)-5:] {
 		recordedTime := int64(price.Timestamp)
 		t := time.UnixMilli(recordedTime).String()
 		fmt.Printf("Listed Price Value: [%d]	Current Lowest Price: [%d]	Timestamp: %s\n", price.Price, price.PriceMin, t)

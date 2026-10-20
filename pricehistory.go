@@ -31,7 +31,7 @@ func incrementCount() {
 }
 
 func showCount() error {
-	fmt.Printf("Request made: %d\n", requestMade)
+	fmt.Printf("Request made: %d / %d\n", requestMade, len(item_cache.cachedItems))
 	return nil
 }
 
@@ -43,6 +43,7 @@ var priceMap = make(map[string][]itemHistory)
 func addPrice(min int, name, t string) {
 	var newData priceRecord
 	newData.minPrice = min
+	newData.time = t
 
 	 for i := 0; i < len(dataForDay); i++ {
         if dataForDay[i].name == name {
@@ -53,14 +54,13 @@ func addPrice(min int, name, t string) {
 
 	var newHistory itemHistory
 	newHistory.name = name
-	newData.time = t
 	newHistory.captured = append(newHistory.captured, newData)
 	dataForDay = append(dataForDay, newHistory)
 }
 
 func addToMap() {
 	day := time.Now().Weekday().String()
-	priceMap[day] = dataForDay
+	priceMap[day] = append(priceMap[day], dataForDay...)
 }
 
 func collectItemData() error {
@@ -86,18 +86,35 @@ func collectItemData() error {
 	}
 
 	for _, item := range item.Data.Items {
-		if len(item.Type) == 0 || item.Type[0] == "noFlea" {
-			continue
-		} else {
-			cacheItem(item)
-		}
+	    skipItem := false
+
+	    for _, itemType := range item.Type {
+	        if itemType == "noFlea" ||
+	            itemType == "gun" ||
+	            itemType == "mods" ||
+	            itemType == "pistolGrip" ||
+	            itemType == "suppressor" ||
+				itemType == "preset" || 
+				itemType == "wearable" ||
+				itemType == "ammoBox" {
+
+	            skipItem = true
+	            break
+	        }
+	    }
+
+	    if skipItem {
+	        continue
+	    }
+		
+	    cacheItem(item)
 	}
 
 	return nil
 }
 
 func collectFleaPrices() error {
-	timer := time.NewTicker(12*time.Second)
+	timer := time.NewTicker(1*time.Second)
 
 	for i := 0; i < len(item_cache.cachedItems); i++ {
 		itemName := item_cache.cachedItems[i].Name
@@ -146,10 +163,18 @@ func collectFleaPrices() error {
 				return err
 			}
 
-			for _, price := range price.Data[len(price.Data)-1:] {
-				recordedTime := int64(price.Timestamp)
-				t := time.UnixMilli(recordedTime).String()
-				addPrice(price.PriceMin, itemName, t)
+			if len(price.Data) < 5 {
+				for _, price := range price.Data {
+					recordedTime := int64(price.Timestamp)
+					t := time.UnixMilli(recordedTime).String()
+					addPrice(price.PriceMin, itemName, t)
+				}
+			} else {
+				for _, price := range price.Data[len(price.Data)-5:] {
+					recordedTime := int64(price.Timestamp)
+					t := time.UnixMilli(recordedTime).String()
+					addPrice(price.PriceMin, itemName, t)
+				}
 			}
 
 			addToMap()
@@ -160,6 +185,8 @@ func collectFleaPrices() error {
 		showCount()
 		<- timer.C
 	}
+
+	fmt.Println("Data fetching complete...")
 
 	return nil
 }
@@ -193,6 +220,18 @@ func collectTraderData() error {
 }
 
 func calculateProfit() {
+	fmt.Println("Days in priceMap:", len(priceMap))
+    fmt.Println("Traders cached:", len(trader_cache.cachedTraders))
+    fmt.Println("Items cached:", len(item_cache.cachedItems))
+
+	for _, trader := range trader_cache.cachedTraders {
+    	fmt.Printf("Trader: %s | ID: %s\n", trader.Name, trader.ID)
+	}
+
+    for day, value := range priceMap {
+        fmt.Printf("%s has %d item histories\n", day, len(value))
+	}
+
 	for _, value := range priceMap {
 		
 		for i := 0; i < len(value); i++ {
@@ -217,16 +256,19 @@ func calculateProfit() {
 				if v.Name == curItemName {
 					for i := 0; i < len(v.SellToTrader); i++ {
 						for _, j := range trader_cache.cachedTraders {
-							if v.SellToTrader[i].Trader == j.ID {
-								sellPrice = v.SellToTrader[i].PriceRub
+							if v.SellToTrader[i].Trader == j.ID && j.Name == "therapist" {
+    							sellPrice = v.SellToTrader[i].PriceRub
 							}
 						}
 					}
 				}
 			}
 
-			if priceCount == 0 {
-				continue
+			fmt.Printf(
+    		"%s | prices: %d | sellPrice: %d\n", curItemName, priceCount, sellPrice)
+
+			if priceCount == 0 || sellPrice == 0 {
+    			continue
 			}
 			
 			avgMinPrice = sumOfPrices / priceCount

@@ -3,10 +3,10 @@ package main
 //=====Items structs=====
 
 type SellToTrader struct {
-	Trader 		string 	`json:"trader"`
-	Currency  	string	`json:"currency"`
 	PriceRub	int		`json:"priceRUB"`
 	Price		int		`json:"price"`
+	Trader 		string 	`json:"trader"`
+	Currency  	string	`json:"currency"`
 }
 
 type Item struct {

@@ -20,8 +20,11 @@ type itemHistory struct {
 }
 
 type goodItem struct {
-	name		string
 	profit		int
+	name		string
+	/*add the asking price since everything is 
+	just a potential profit. This will let people
+	be aware of the threshold price*/
 }
 
 var requestMade int
@@ -113,6 +116,8 @@ func collectItemData() error {
 
 	return nil
 }
+
+//remove printing statments from function below
 
 func collectFleaPrices() error {
 	timer := time.NewTicker(1*time.Second)

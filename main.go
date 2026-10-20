@@ -39,7 +39,13 @@ var commandRegistry = map[string]cliCommand {
 		description: 	"Test command",
 		callback: 		profitResults,
 	},
+
+	/*add some more commands like a help command, request 
+	tracker if active rquest in progress, and and profit
+	checker*/
 }
+
+//create a function that will clean the names of the items and remove special characters
 
 func cleanInput(text string) []string {
 	wordArr := strings.Fields(strings.ToLower(text))

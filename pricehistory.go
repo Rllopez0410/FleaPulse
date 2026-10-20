@@ -37,6 +37,7 @@ func showCount() error {
 
 var dataForDay = make([]itemHistory, 0, 5000)
 var profitibleItems = make([]goodItem, 0, 2000)
+//create a function that'll sort most to least profitiable
 
 var priceMap = make(map[string][]itemHistory)
 
@@ -97,7 +98,7 @@ func collectItemData() error {
 				itemType == "preset" || 
 				itemType == "wearable" ||
 				itemType == "ammoBox" {
-
+					//possibly remove keys from the equation as well
 	            skipItem = true
 	            break
 	        }
@@ -247,9 +248,6 @@ func calculateProfit() {
 			for _, priceStruct := range value[i].captured {
 				sumOfPrices += priceStruct.minPrice
 				priceCount++
-				/*add all the min prices and get the avg. once avg is solved
-				you subtract it from the sell price to see the averageProfit
-				for each item that's on the flea*/
 			}
 
 			for _, v := range item_cache.cachedItems {

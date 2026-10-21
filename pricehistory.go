@@ -117,8 +117,11 @@ func collectItemData() error {
 }
 
 func collectFleaPrices() error {
-	timer := time.NewTicker(1*time.Second)
+	//add a command that will change the rate of the ticker
+	timer := time.NewTicker(50*time.Millisecond)
 	defer timer.Stop()
+
+	var failCount int
 
 	for i := 0; i < len(item_cache.cachedItems); i++ {
 		itemName := item_cache.cachedItems[i].Name
@@ -153,6 +156,7 @@ func collectFleaPrices() error {
 
 			if res.StatusCode > 299 {
     			fmt.Printf("FAILED: %s | %s | status: %d\n", itemName, itemId, res.StatusCode)
+				failCount++
     			continue
 			} else {
 				fmt.Printf("SUCCESS: %s | %s | status: %d\n", itemName, itemId, res.StatusCode)
@@ -184,12 +188,12 @@ func collectFleaPrices() error {
 			addToMap()
 			dataForDay = dataForDay[:0]
 		}
-
 		incrementCount()
 		showCount()
 		<- timer.C
 	}
 
+	fmt.Println(failCount)
 	<-timer.C
 	fmt.Println("Data fetching complete...")
 	<-timer.C

@@ -24,28 +24,101 @@ var commandRegistry = map[string]cliCommand {
 		description: 	"Exit the scanner",
 		callback:    	commandKill,
 	},
+
 	"items": {
 		name: 			"items",
 		description:	"Searches for items",
 		callback: 		fetchItemsInfo,
 	},
+
 	"flea": {
 		name: 			"flea",
-		description: 	"Searches for specified item and returns pricing data",
+		description: 	"Searching for specified item on the flea.",
 		callback: 		fetchItemOnFlea,
 	},
-	"test": {
-		name: 			"test",
-		description: 	"Test command",
+
+	"profits": {
+		name: 			"profits",
+		description: 	"Retrieves a list of potential profitable items.",
 		callback: 		profitResults,
 	},
 
-	/*add some more commands like a help command, request 
-	tracker if active rquest in progress, and and profit
-	checker*/
+	"pulse": {
+    	name:        "pulse",
+    	description: "Scannning the flea market. This may take a few minutes...",
+    	callback:    priceSnapShot,
+},
+
+	"man": {
+		name:		"help",
+		description: 	
+		`
+		Welcome to Tarkov FleaPulse. This program is designed to find potentially 
+		profitable items on the flea market that can be flipped by selling them to 
+		traders. The program analyzes recorded flea market prices and compares 
+		them against trader sell prices to identify potential profit opportunities. 
+		Results are based on historical pricing data and do not guarantee current 
+		flea market prices or profits. FleaPulse serves as a guide to help you 
+		identify which items may be worth paying attention to or searching for on 
+		the flea market.
+		
+		General Commands:
+		
+		Name:
+		"kill"
+		
+		Description: 	
+		"Terminate the program."
+		
+		-------------------------------------------------------------------------
+
+		Name:
+		"items"
+		
+		Description:
+		"Searches for essential informtion about each item like ID, name, ane type."
+		
+		-------------------------------------------------------------------------
+
+		Name:
+		"flea"
+		
+		Description:
+		"Searches for specified item and returns pricing data history."
+		
+		-------------------------------------------------------------------------
+
+		Name:
+		"profits"
+		
+		Description:
+		"Retrieves a list of potential profitable items."
+
+		-------------------------------------------------------------------------
+
+		Name:
+		"pulse"
+
+		Description:
+		"Scans the flea market for pricing data, calculates the average minimum 
+		price of each item, and compares it to the item's trader sell price to 
+		identify potential profit opportunities."
+		
+		-------------------------------------------------------------------------
+
+		Name:
+		"man"
+
+		Description:
+		"Displays a manual of general commands for navigating and using the CLI."
+		`,
+
+		callback: commandMan,
+	},
 }
 
 //create a function that will clean the names of the items and remove special characters
+//create a gamemode variable so that users can change between them
 
 func cleanInput(text string) []string {
 	wordArr := strings.Fields(strings.ToLower(text))
@@ -58,22 +131,25 @@ func commandKill() error {
 	return nil
 }
 
-func priceSnapShot() {
-	timer := time.NewTicker(2*time.Hour + 10*time.Minute)
+func commandMan() error {
+	return nil
+}
 
-	for {
-		collectItemData()
-		if len(trader_cache.cachedTraders) == 0 {
-			collectTraderData()
-		}
-		collectFleaPrices()
-		calculateProfit()
-		//Create a function that will compute the differences of the FLEA and SELL price.
-		<- timer.C
+func priceSnapShot() error {
+	collectItemData()
+	if len(trader_cache.cachedTraders) == 0 {
+		collectTraderData()
 	}
+	collectFleaPrices()
+	calculateProfit()
+
+	return nil
 }
 
 func profitResults() error {
+	timer := time.NewTicker(50*time.Millisecond)
+	defer timer.Stop()
+	
 	if len(profitibleItems) == 0 {
 		fmt.Println(len(item_cache.cachedItems))
 		fmt.Println("There are no results. Try again later!")
@@ -81,7 +157,8 @@ func profitResults() error {
 	}
 
 	for i := 0; i < len(profitibleItems); i++ {
-		fmt.Printf("Name: %s -> Profit: %d\n", profitibleItems[i].name, profitibleItems[i].profit)
+		fmt.Printf("Name: %s | Profit: %d\n", profitibleItems[i].name, profitibleItems[i].profit)
+		<- timer.C
 	}
 
 	return nil
@@ -118,7 +195,7 @@ func fetchItemOnFlea() error {
 	for _, price := range price.Data[len(price.Data)-5:] {
 		recordedTime := int64(price.Timestamp)
 		t := time.UnixMilli(recordedTime).String()
-		fmt.Printf("Listed Price Value: [%d]	Current Lowest Price: [%d]	Timestamp: %s\n", price.Price, price.PriceMin, t)
+		fmt.Printf("Listed Price Value: [%d]	|	Current Lowest Price: [%d]	|	Timestamp: %s\n", price.Price, price.PriceMin, t)
 	}
 
 	return nil
@@ -155,7 +232,7 @@ func fetchItemsInfo() error {
 		} else {
 			t = item.Type[0]
 			itemCount += 1
-			fmt.Printf("ID: %s -> Name: %s -> Type %s\n", item.ID, item.Name, t)
+			fmt.Printf("ID: %s | Name: %s | Type %s\n", item.ID, item.Name, t)
 		}
 	}
 	
@@ -190,7 +267,25 @@ func startRepl() {
 }
 
 func main() {
-	fmt.Println("Scanning flea...")
-	go priceSnapShot()
+	timer := time.NewTicker(150*time.Millisecond)
+	defer timer.Stop()
+
+	fmt.Println(`		
+		███████╗██╗     ███████╗ █████╗ ██████╗ ██╗   ██╗██╗     ███████╗███████╗`)
+	<-timer.C
+	fmt.Println(`		██╔════╝██║     ██╔════╝██╔══██╗██╔══██╗██║   ██║██║     ██╔════╝██╔════╝`)
+	<-timer.C
+	fmt.Println(`		█████╗  ██║     █████╗  ███████║██████╔╝██║   ██║██║     ███████╗█████╗`)
+	<-timer.C
+	fmt.Println(`		██╔══╝  ██║     ██╔══╝  ██╔══██║██╔═══╝ ██║   ██║██║     ╚════██║██╔══╝`)
+	<-timer.C
+	fmt.Println(`		██║     ███████╗███████╗██║  ██║██║     ╚██████╔╝███████╗███████║███████╗`)
+	<-timer.C
+	fmt.Println(`		╚═╝     ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝      ╚═════╝ ╚══════╝╚══════╝╚══════╝
+	`)
+	
+	fmt.Println("		\033[1mWelcome To FleaPulse\033[0m...\n")
+	fmt.Println("		Type \033[1mman\033[0m to see a list of general commands.\n")
+	
 	startRepl()
 }

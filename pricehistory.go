@@ -22,7 +22,7 @@ type itemHistory struct {
 type goodItem struct {
 	profit		int
 	name		string
-	/*add the asking price since everything is 
+	/*add the selling price since everything is 
 	just a potential profit. This will let people
 	be aware of the threshold price*/
 }
@@ -101,7 +101,6 @@ func collectItemData() error {
 				itemType == "preset" || 
 				itemType == "wearable" ||
 				itemType == "ammoBox" {
-					//possibly remove keys from the equation as well
 	            skipItem = true
 	            break
 	        }
@@ -117,10 +116,9 @@ func collectItemData() error {
 	return nil
 }
 
-//remove printing statments from function below
-
 func collectFleaPrices() error {
 	timer := time.NewTicker(1*time.Second)
+	defer timer.Stop()
 
 	for i := 0; i < len(item_cache.cachedItems); i++ {
 		itemName := item_cache.cachedItems[i].Name
@@ -192,8 +190,11 @@ func collectFleaPrices() error {
 		<- timer.C
 	}
 
+	<-timer.C
 	fmt.Println("Data fetching complete...")
-
+	<-timer.C
+	fmt.Println("Averaging prices...")
+	<-timer.C
 	return nil
 }
 
@@ -226,17 +227,8 @@ func collectTraderData() error {
 }
 
 func calculateProfit() {
-	fmt.Println("Days in priceMap:", len(priceMap))
-    fmt.Println("Traders cached:", len(trader_cache.cachedTraders))
-    fmt.Println("Items cached:", len(item_cache.cachedItems))
-
-	for _, trader := range trader_cache.cachedTraders {
-    	fmt.Printf("Trader: %s | ID: %s\n", trader.Name, trader.ID)
-	}
-
-    for day, value := range priceMap {
-        fmt.Printf("%s has %d item histories\n", day, len(value))
-	}
+	timer := time.NewTicker(3*time.Second)
+	defer timer.Stop()
 
 	for _, value := range priceMap {
 		
@@ -267,9 +259,6 @@ func calculateProfit() {
 				}
 			}
 
-			fmt.Printf(
-    		"%s | prices: %d | sellPrice: %d\n", curItemName, priceCount, sellPrice)
-
 			if priceCount == 0 || sellPrice == 0 {
     			continue
 			}
@@ -287,4 +276,7 @@ func calculateProfit() {
 			}
 		}
 	} 
+
+	<-timer.C
+	fmt.Println("Calculation completed!")
 }

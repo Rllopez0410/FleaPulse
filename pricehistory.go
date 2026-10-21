@@ -27,6 +27,7 @@ type goodItem struct {
 	be aware of the threshold price*/
 }
 
+//put this in a function. It does not need to be global.
 var requestMade int
 
 func incrementCount() {
@@ -34,6 +35,7 @@ func incrementCount() {
 }
 
 func showCount() error {
+	//clear the item cache so that you're not adding copies of the same items.
 	fmt.Printf("Request made: %d / %d\n", requestMade, len(item_cache.cachedItems))
 	return nil
 }

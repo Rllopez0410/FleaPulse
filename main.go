@@ -137,10 +137,14 @@ func commandMan() error {
 }
 
 func priceSnapShot() error {
-	collectItemData()
+	if len(item_cache.cachedItems) == 0 {
+		collectItemData()
+	}
+
 	if len(trader_cache.cachedTraders) == 0 {
 		collectTraderData()
 	}
+
 	collectFleaPrices()
 	calculateProfit()
 
@@ -184,6 +188,7 @@ func fetchItemOnFlea() error {
 	if res.StatusCode > 299 {
 		log.Fatalf("Status Code %v", res.StatusCode)
 	}
+
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -215,6 +220,7 @@ func fetchItemsInfo() error {
 	if res.StatusCode > 299 {
 		log.Fatalf("Status Code: %v", res.StatusCode)
 	}
+
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -261,6 +267,7 @@ func startRepl() {
 				break
 			}
 		}
+		
 		if !matchKey {
 			fmt.Println("Unknown command")
 		}

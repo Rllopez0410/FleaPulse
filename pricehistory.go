@@ -41,7 +41,7 @@ func showCount() error {
 }
 
 var dataForDay = make([]itemHistory, 0, 5000)
-var profitibleItems = make([]goodItem, 0, 2000)
+var profitibleItems = make([]goodItem, 0, 500)
 //create a function that'll sort most to least profitiable
 
 var priceMap = make(map[string][]itemHistory)
@@ -82,6 +82,7 @@ func collectItemData() error {
 	if res.StatusCode > 299 {
 		log.Fatalf("Status Code for items: %v", res.StatusCode)
 	}
+
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -190,12 +191,13 @@ func collectFleaPrices() error {
 			addToMap()
 			dataForDay = dataForDay[:0]
 		}
+
 		incrementCount()
 		showCount()
 		<- timer.C
 	}
 
-	fmt.Println(failCount)
+	requestMade = 0
 	<-timer.C
 	fmt.Println("Data fetching complete...")
 	<-timer.C

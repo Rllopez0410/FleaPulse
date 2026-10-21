@@ -28,17 +28,6 @@ type goodItem struct {
 }
 
 //put this in a function. It does not need to be global.
-var requestMade int
-
-func incrementCount() {
-	requestMade += 1
-}
-
-func showCount() error {
-	//clear the item cache so that you're not adding copies of the same items.
-	fmt.Printf("Request made: %d / %d\n", requestMade, len(item_cache.cachedItems))
-	return nil
-}
 
 var dataForDay = make([]itemHistory, 0, 5000)
 var profitibleItems = make([]goodItem, 0, 500)
@@ -119,12 +108,31 @@ func collectItemData() error {
 	return nil
 }
 
+func printProgress(current, total int) {
+	const barWidth = 50
+
+	percent := float64(current) / float64(total)
+	filled := int(percent * float64(barWidth))
+
+	fmt.Printf("\r[")
+
+	for i := 0; i < barWidth; i++ {
+		if i < filled {
+			fmt.Print("=")
+		} else {
+			fmt.Print(" ")
+		}
+	}
+
+	fmt.Printf("] %d/%d (%.0f%%) ", current, total, percent*100)
+}
+
 func collectFleaPrices() error {
 	//add a command that will change the rate of the ticker
 	timer := time.NewTicker(50*time.Millisecond)
 	defer timer.Stop()
 
-	var failCount int
+	var requestMade int
 
 	for i := 0; i < len(item_cache.cachedItems); i++ {
 		itemName := item_cache.cachedItems[i].Name
@@ -144,7 +152,7 @@ func collectFleaPrices() error {
 		} else {
 			res, err := http.Get("https://json.tarkov.dev/pve/prices/" + itemId)
 			if err != nil {
-				fmt.Printf("Request failed for %s (%s): %v\n", itemName, itemId, err)
+				//fmt.Printf("Request failed for %s (%s): %v\n", itemName, itemId, err)
 				
 				time.Sleep(30 * time.Second)
 
@@ -157,13 +165,13 @@ func collectFleaPrices() error {
 			data, err := io.ReadAll(res.Body)
 			res.Body.Close()
 
-			if res.StatusCode > 299 {
+			/*if res.StatusCode > 299 {
     			fmt.Printf("FAILED: %s | %s | status: %d\n", itemName, itemId, res.StatusCode)
 				failCount++
     			continue
 			} else {
 				fmt.Printf("SUCCESS: %s | %s | status: %d\n", itemName, itemId, res.StatusCode)
-			}
+			}*/
 
 			if err != nil {
 				log.Fatal(err)
@@ -192,8 +200,8 @@ func collectFleaPrices() error {
 			dataForDay = dataForDay[:0]
 		}
 
-		incrementCount()
-		showCount()
+		requestMade++
+		printProgress(requestMade, len(item_cache.cachedItems))
 		<- timer.C
 	}
 

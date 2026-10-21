@@ -53,64 +53,65 @@ var commandRegistry = map[string]cliCommand {
 		name:		"help",
 		description: 	
 		`
-		Welcome to Tarkov FleaPulse. This program is designed to find potentially 
-		profitable items on the flea market that can be flipped by selling them to 
-		traders. The program analyzes recorded flea market prices and compares 
-		them against trader sell prices to identify potential profit opportunities. 
-		Results are based on historical pricing data and do not guarantee current 
-		flea market prices or profits. FleaPulse serves as a guide to help you 
-		identify which items may be worth paying attention to or searching for on 
-		the flea market.
-		
-		General Commands:
-		
-		Name:
-		"kill"
-		
-		Description: 	
-		"Terminate the program."
-		
-		-------------------------------------------------------------------------
+			Welcome to Tarkov FleaPulse. This program is designed to find potentially 
+			profitable items on the flea market that can be flipped by selling them to 
+			traders. The program analyzes recorded flea market prices and compares 
+			them against trader sell prices to identify potential profit opportunities. 
+			Results are based on historical pricing data and do not guarantee current 
+			flea market prices or profits. FleaPulse serves as a guide to help you 
+			identify which items may be worth paying attention to or searching for on 
+			the flea market.
 
-		Name:
-		"items"
-		
-		Description:
-		"Searches for essential informtion about each item like ID, name, ane type."
-		
-		-------------------------------------------------------------------------
+			General Commands:
 
-		Name:
-		"flea"
-		
-		Description:
-		"Searches for specified item and returns pricing data history."
-		
-		-------------------------------------------------------------------------
+			Name:
+			"kill"
 
-		Name:
-		"profits"
-		
-		Description:
-		"Retrieves a list of potential profitable items."
+			Description: 	
+			"Terminate the program."
 
-		-------------------------------------------------------------------------
+			-------------------------------------------------------------------------
 
-		Name:
-		"pulse"
+			Name:
+			"items"
 
-		Description:
-		"Scans the flea market for pricing data, calculates the average minimum 
-		price of each item, and compares it to the item's trader sell price to 
-		identify potential profit opportunities."
-		
-		-------------------------------------------------------------------------
+			Description:
+			"Searches for essential information about each item, such as its ID, name, 
+			 and type."
 
-		Name:
-		"man"
+			-------------------------------------------------------------------------
 
-		Description:
-		"Displays a manual of general commands for navigating and using the CLI."
+			Name:
+			"flea"
+
+			Description:
+			"Searches for a specified item and returns its pricing history."
+
+			-------------------------------------------------------------------------
+
+			Name:
+			"profits"
+
+			Description:
+			"Retrieves a list of potentially profitable items."
+
+			-------------------------------------------------------------------------
+
+			Name:
+			"pulse"
+
+			Description:
+			"Scans the flea market for pricing data, calculates the average minimum 
+			 price of each item, and compares it to the item's trader sell price to 
+			 identify potential profit opportunities."
+
+			-------------------------------------------------------------------------
+
+			Name:
+			"man"
+
+			Description:
+			"Displays a manual of general commands for navigating and using the CLI."
 		`,
 
 		callback: commandMan,
@@ -149,7 +150,7 @@ func priceSnapShot() error {
 func profitResults() error {
 	timer := time.NewTicker(50*time.Millisecond)
 	defer timer.Stop()
-	
+
 	if len(profitibleItems) == 0 {
 		fmt.Println(len(item_cache.cachedItems))
 		fmt.Println("There are no results. Try again later!")
@@ -165,7 +166,7 @@ func profitResults() error {
 }
 
 func fetchItemOnFlea() error {
-	fmt.Printf("Insert Item ID ->")
+	fmt.Printf("Insert Item ID =>")
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
 	id := scanner.Text()
@@ -245,7 +246,7 @@ func startRepl() {
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for {
-		fmt.Print("Tarkov >")
+		fmt.Print("Tarkov => ")
 		scanner.Scan()
 		text := scanner.Text()
 		scanner.Err()
@@ -271,21 +272,21 @@ func main() {
 	defer timer.Stop()
 
 	fmt.Println(`		
-		███████╗██╗     ███████╗ █████╗ ██████╗ ██╗   ██╗██╗     ███████╗███████╗`)
+			███████╗██╗     ███████╗ █████╗ ██████╗ ██╗   ██╗██╗     ███████╗███████╗`)
 	<-timer.C
-	fmt.Println(`		██╔════╝██║     ██╔════╝██╔══██╗██╔══██╗██║   ██║██║     ██╔════╝██╔════╝`)
-	<-timer.C
-	fmt.Println(`		█████╗  ██║     █████╗  ███████║██████╔╝██║   ██║██║     ███████╗█████╗`)
-	<-timer.C
-	fmt.Println(`		██╔══╝  ██║     ██╔══╝  ██╔══██║██╔═══╝ ██║   ██║██║     ╚════██║██╔══╝`)
-	<-timer.C
-	fmt.Println(`		██║     ███████╗███████╗██║  ██║██║     ╚██████╔╝███████╗███████║███████╗`)
-	<-timer.C
-	fmt.Println(`		╚═╝     ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝      ╚═════╝ ╚══════╝╚══════╝╚══════╝
+	fmt.Println(`			██╔════╝██║     ██╔════╝██╔══██╗██╔══██╗██║   ██║██║     ██╔════╝██╔════╝`)
+	<-timer.C	
+	fmt.Println(`			█████╗  ██║     █████╗  ███████║██████╔╝██║   ██║██║     ███████╗█████╗`)
+	<-timer.C	
+	fmt.Println(`			██╔══╝  ██║     ██╔══╝  ██╔══██║██╔═══╝ ██║   ██║██║     ╚════██║██╔══╝`)
+	<-timer.C	
+	fmt.Println(`			██║     ███████╗███████╗██║  ██║██║     ╚██████╔╝███████╗███████║███████╗`)
+	<-timer.C	
+	fmt.Println(`			╚═╝     ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝      ╚═════╝ ╚══════╝╚══════╝╚══════╝
 	`)
 	
-	fmt.Println("		\033[1mWelcome To FleaPulse\033[0m...\n")
-	fmt.Println("		Type \033[1mman\033[0m to see a list of general commands.\n")
+	fmt.Println("			\033[1mWelcome To FleaPulse\033[0m...\n")
+	fmt.Println("			Type [ \033[1mman\033[0m ] to see a list of general commands.\n")
 	
 	startRepl()
 }

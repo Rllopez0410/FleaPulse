@@ -18,6 +18,8 @@ type cliCommand struct {
 	callback	func() error
 }
 
+//make a new file to hold commandmap and struct
+
 var commandRegistry = map[string]cliCommand {
 	"kill": {
 		name:        	"kill",
@@ -88,7 +90,17 @@ var commandRegistry = map[string]cliCommand {
 			 "Searches for a specified item and returns its pricing history."
  
 			 -------------------------------------------------------------------------
- 
+  
+			 Name:
+			 "pulse"
+			 
+			 Description:
+			 "Scans the flea market for pricing data, calculates the average minimum 
+			 price of each item, and compares it to the item's trader sell price to 
+			 identify potential profit opportunities."
+			 
+			 -------------------------------------------------------------------------
+			 
 			 Name:
 			 "profits"
  
@@ -96,17 +108,7 @@ var commandRegistry = map[string]cliCommand {
 			 "Retrieves a list of potentially profitable items."
  
 			 -------------------------------------------------------------------------
- 
-			 Name:
-			 "pulse"
- 
-			 Description:
-			 "Scans the flea market for pricing data, calculates the average minimum 
-			  price of each item, and compares it to the item's trader sell price to 
-			  identify potential profit opportunities."
- 
-			 -------------------------------------------------------------------------
- 
+			
 			 Name:
 			 "man"
  
@@ -267,7 +269,7 @@ func startRepl() {
 				break
 			}
 		}
-		
+
 		if !matchKey {
 			fmt.Println("Unknown command")
 		}

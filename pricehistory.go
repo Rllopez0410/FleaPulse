@@ -27,8 +27,6 @@ type goodItem struct {
 	be aware of the threshold price*/
 }
 
-//put this in a function. It does not need to be global.
-
 var dataForDay = make([]itemHistory, 0, 5000)
 var profitibleItems = make([]goodItem, 0, 500)
 //create a function that'll sort most to least profitiable
@@ -118,7 +116,7 @@ func printProgress(current, total int) {
 
 	for i := 0; i < barWidth; i++ {
 		if i < filled {
-			fmt.Print("=")
+			fmt.Print("#")
 		} else {
 			fmt.Print(" ")
 		}
@@ -152,8 +150,6 @@ func collectFleaPrices() error {
 		} else {
 			res, err := http.Get("https://json.tarkov.dev/pve/prices/" + itemId)
 			if err != nil {
-				//fmt.Printf("Request failed for %s (%s): %v\n", itemName, itemId, err)
-				
 				time.Sleep(30 * time.Second)
 
 				res, err = http.Get("https://json.tarkov.dev/pve/prices/" + itemId)
@@ -165,6 +161,7 @@ func collectFleaPrices() error {
 			data, err := io.ReadAll(res.Body)
 			res.Body.Close()
 
+			//but this data in the progress bar function
 			/*if res.StatusCode > 299 {
     			fmt.Printf("FAILED: %s | %s | status: %d\n", itemName, itemId, res.StatusCode)
 				failCount++

@@ -12,7 +12,42 @@ import (
 	"time"
 )
 
-//create a gamemode variable so that users can change between them
+func checkMode() error {
+	timer := time.NewTicker(50*time.Millisecond)
+	defer timer.Stop()
+
+	for {
+		fmt.Printf("Current game mode: %s\n", mode)
+		<-timer.C
+		fmt.Printf("Would like to change the mode: [y/n]")
+		scanner := bufio.NewScanner(os.Stdin)
+		scanner.Scan()
+		choice := scanner.Text()
+		scanner.Err()
+	
+		switch choice {
+			case "y":
+				<-timer.C
+				fmt.Print("Choose mode [pve/regular/pvp-season]: ")
+				scanner.Scan()
+				newMode := scanner.Text()
+
+				if newMode != "pve" && newMode != "regular" && newMode != "pvp-season" {
+					fmt.Printf("Invalid mode... Please try again.\n")
+				} else {
+					<-timer.C
+					fmt.Printf("Mode switched to \033[1m%s\033[0m...\n", newMode)
+					return nil
+				}
+			case "n":
+				<-timer.C
+				fmt.Printf("Mode unchanged...\n")
+				return nil
+			default:
+				fmt.Printf("Invalid choice... Please try again.\n")	
+		}
+	}
+}
 
 func cleanInput(text string) []string {
 	wordArr := strings.Fields(strings.ToLower(text))
@@ -106,6 +141,8 @@ func fetchItemOnFlea() error {
 }
 
 func fetchItemsInfo() error {
+	timer := time.NewTicker(2*time.Millisecond)
+	defer timer.Stop()
 	res, err := http.Get("https://json.tarkov.dev/" + mode + "/items")
 	if err != nil {
 		fmt.Println("Error: Cannot connect to api")
@@ -141,6 +178,8 @@ func fetchItemsInfo() error {
 			item.Name = strings.ReplaceAll(item.Name, "-", " ")
 			fmt.Printf("ID: %s | Name: %s | Type %s\n", item.ID, item.Name, t)
 		}
+
+		<-timer.C
 	}
 	
 	fmt.Printf("Items found: %d\n", itemCount)

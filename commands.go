@@ -15,25 +15,31 @@ type cliCommand struct {
 var commandRegistry = map[string]cliCommand {
 	"kill": {
 		name:        	"kill",
-		description: 	"Exit the scanner",
+		description: 	"Exit the scanner.",
 		callback:    	commandKill,
+	},
+
+	"mode": {
+		name: 			"mode",
+		description:	"Checking mode...",
+		callback: 		checkMode,
 	},
 
 	"items": {
 		name: 			"items",
-		description:	"Searches for items",
+		description:	"Searching for items...",
 		callback: 		fetchItemsInfo,
 	},
 
 	"flea": {
 		name: 			"flea",
-		description: 	"Searching for specified item on the flea.",
+		description: 	"Searching for specified item on the flea...",
 		callback: 		fetchItemOnFlea,
 	},
 
 	"profits": {
 		name: 			"profits",
-		description: 	"Retrieves a list of potential profitable items.",
+		description: 	"Retrieving a list of potential profitable items...",
 		callback: 		profitResults,
 	},
 
@@ -44,7 +50,7 @@ var commandRegistry = map[string]cliCommand {
 },
 
 	"man": {
-		name:		"help",
+		name:		"man",
 		description: 	
 		`
 			 Welcome to Tarkov FleaPulse. This program is designed to find potentially 
@@ -63,6 +69,14 @@ var commandRegistry = map[string]cliCommand {
  
 			 Description: 	
 			 "Terminate the program."
+ 
+			 -------------------------------------------------------------------------
+
+			 Name:
+			 "mode"
+ 
+			 Description: 	
+			 "Displays the current game mode and allows you to change it."
  
 			 -------------------------------------------------------------------------
  

@@ -13,9 +13,6 @@ type traderCache struct {
 	cachedTraders	[]Trader
 }
 
-var item_cache itemCache
-var trader_cache traderCache
-
 func cacheItem(item Item) {
 	item_cache.timeCached = time.Now()
 	item_cache.cachedItems = append(item_cache.cachedItems, item)

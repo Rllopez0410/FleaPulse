@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -27,11 +28,7 @@ type goodItem struct {
 	be aware of the threshold price*/
 }
 
-var dataForDay = make([]itemHistory, 0, 5000)
-var profitibleItems = make([]goodItem, 0, 500)
 //create a function that'll sort most to least profitiable
-
-var priceMap = make(map[string][]itemHistory)
 
 func addPrice(min int, name, t string) {
 	var newData priceRecord
@@ -57,7 +54,7 @@ func addToMap() {
 }
 
 func collectItemData() error {
-	res, err := http.Get("https://json.tarkov.dev/pve/items")
+	res, err := http.Get("https://json.tarkov.dev/" + mode + "/items")
 	if err != nil {
 		fmt.Println("Error: Cannot connect to api")
 		return err
@@ -99,14 +96,16 @@ func collectItemData() error {
 	    if skipItem {
 	        continue
 	    }
-		
+
+		item.Name = strings.ReplaceAll(item.Name, "-", " ")
+
 	    cacheItem(item)
 	}
 
 	return nil
 }
 
-func printProgress(current, total int) {
+func progressBar(current, total int) {
 	const barWidth = 50
 
 	percent := float64(current) / float64(total)
@@ -148,11 +147,11 @@ func collectFleaPrices() error {
 		if skipItem {
 			continue
 		} else {
-			res, err := http.Get("https://json.tarkov.dev/pve/prices/" + itemId)
+			res, err := http.Get("https://json.tarkov.dev/" + mode + "/prices/" + itemId)
 			if err != nil {
 				time.Sleep(30 * time.Second)
 
-				res, err = http.Get("https://json.tarkov.dev/pve/prices/" + itemId)
+				res, err = http.Get("https://json.tarkov.dev/" + mode + "/prices/" + itemId)
 				if err != nil {
 					return err
 				}
@@ -198,7 +197,7 @@ func collectFleaPrices() error {
 		}
 
 		requestMade++
-		printProgress(requestMade, len(item_cache.cachedItems))
+		progressBar(requestMade, len(item_cache.cachedItems))
 		<- timer.C
 	}
 
@@ -212,7 +211,7 @@ func collectFleaPrices() error {
 }
 
 func collectTraderData() error {
-	res, err := http.Get("https://json.tarkov.dev/pve/traders")
+	res, err := http.Get("https://json.tarkov.dev/" + mode + "/traders")
 	if err != nil {
 		fmt.Println("Error: cannot connect to api")
 		return err

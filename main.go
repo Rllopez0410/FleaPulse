@@ -12,115 +12,6 @@ import (
 	"time"
 )
 
-type cliCommand struct {
-	name		string
-	description	string
-	callback	func() error
-}
-
-//make a new file to hold commandmap and struct
-
-var commandRegistry = map[string]cliCommand {
-	"kill": {
-		name:        	"kill",
-		description: 	"Exit the scanner",
-		callback:    	commandKill,
-	},
-
-	"items": {
-		name: 			"items",
-		description:	"Searches for items",
-		callback: 		fetchItemsInfo,
-	},
-
-	"flea": {
-		name: 			"flea",
-		description: 	"Searching for specified item on the flea.",
-		callback: 		fetchItemOnFlea,
-	},
-
-	"profits": {
-		name: 			"profits",
-		description: 	"Retrieves a list of potential profitable items.",
-		callback: 		profitResults,
-	},
-
-	"pulse": {
-    	name:        "pulse",
-    	description: "Scannning the flea market. This may take a few minutes...",
-    	callback:    priceSnapShot,
-},
-
-	"man": {
-		name:		"help",
-		description: 	
-		`
-			 Welcome to Tarkov FleaPulse. This program is designed to find potentially 
-			 profitable items on the flea market that can be flipped by selling them to 
-			 traders. The program analyzes recorded flea market prices and compares 
-			 them against trader sell prices to identify potential profit opportunities. 
-			 Results are based on historical pricing data and do not guarantee current 
-			 flea market prices or profits. FleaPulse serves as a guide to help you 
-			 identify which items may be worth paying attention to or searching for on 
-			 the flea market.
- 
-			 General Commands:
- 
-			 Name:
-			 "kill"
- 
-			 Description: 	
-			 "Terminate the program."
- 
-			 -------------------------------------------------------------------------
- 
-			 Name:
-			 "items"
- 
-			 Description:
-			 "Searches for essential information about each item, such as its ID, name, 
-			  and type."
- 
-			 -------------------------------------------------------------------------
- 
-			 Name:
-			 "flea"
- 
-			 Description:
-			 "Searches for a specified item and returns its pricing history."
- 
-			 -------------------------------------------------------------------------
-  
-			 Name:
-			 "pulse"
-			 
-			 Description:
-			 "Scans the flea market for pricing data, calculates the average minimum 
-			 price of each item, and compares it to the item's trader sell price to 
-			 identify potential profit opportunities."
-			 
-			 -------------------------------------------------------------------------
-			 
-			 Name:
-			 "profits"
- 
-			 Description:
-			 "Retrieves a list of potentially profitable items."
- 
-			 -------------------------------------------------------------------------
-			
-			 Name:
-			 "man"
- 
-			 Description:
-			 "Displays a manual of general commands for navigating and using the CLI."
-		`,
-
-		callback: commandMan,
-	},
-}
-
-//create a function that will clean the names of the items and remove special characters
 //create a gamemode variable so that users can change between them
 
 func cleanInput(text string) []string {
@@ -172,13 +63,17 @@ func profitResults() error {
 }
 
 func fetchItemOnFlea() error {
-	fmt.Printf("Insert Item ID =>")
+	timer := time.NewTicker(15*time.Millisecond)
+	defer timer.Stop()
+
+	fmt.Printf("Insert Item ID => ")
+
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
 	id := scanner.Text()
 	scanner.Err()
 
-	res, err := http.Get("https://json.tarkov.dev/pve/prices/" + id)
+	res, err := http.Get("https://json.tarkov.dev/" + mode + "/prices/" + id)
 	if err != nil {
 		fmt.Println("Error: cannot connect to api")
 		return err
@@ -204,13 +99,14 @@ func fetchItemOnFlea() error {
 		recordedTime := int64(price.Timestamp)
 		t := time.UnixMilli(recordedTime).String()
 		fmt.Printf("Listed Price Value: [%d]	|	Current Lowest Price: [%d]	|	Timestamp: %s\n", price.Price, price.PriceMin, t)
+		<-timer.C
 	}
 
 	return nil
 }
 
 func fetchItemsInfo() error {
-	res, err := http.Get("https://json.tarkov.dev/pve/items")
+	res, err := http.Get("https://json.tarkov.dev/" + mode + "/items")
 	if err != nil {
 		fmt.Println("Error: Cannot connect to api")
 		return err
@@ -236,11 +132,13 @@ func fetchItemsInfo() error {
 
 	for _, item := range item.Data.Items {
 		var t string
+
 		if len(item.Type) == 0 || item.Type[0] == "noFlea" {
 			continue
 		} else {
 			t = item.Type[0]
 			itemCount += 1
+			item.Name = strings.ReplaceAll(item.Name, "-", " ")
 			fmt.Printf("ID: %s | Name: %s | Type %s\n", item.ID, item.Name, t)
 		}
 	}
@@ -277,25 +175,6 @@ func startRepl() {
 }
 
 func main() {
-	timer := time.NewTicker(150*time.Millisecond)
-	defer timer.Stop()
-
-	fmt.Println(`		
-			 ███████╗██╗     ███████╗ █████╗ ██████╗ ██╗   ██╗██╗     ███████╗███████╗`)
-	<-timer.C
-	fmt.Println(`			 ██╔════╝██║     ██╔════╝██╔══██╗██╔══██╗██║   ██║██║     ██╔════╝██╔════╝`)
-	<-timer.C	 
-	fmt.Println(`			 █████╗  ██║     █████╗  ███████║██████╔╝██║   ██║██║     ███████╗█████╗`)
-	<-timer.C	 
-	fmt.Println(`			 ██╔══╝  ██║     ██╔══╝  ██╔══██║██╔═══╝ ██║   ██║██║     ╚════██║██╔══╝`)
-	<-timer.C	 
-	fmt.Println(`			 ██║     ███████╗███████╗██║  ██║██║     ╚██████╔╝███████╗███████║███████╗`)
-	<-timer.C	 
-	fmt.Println(`			 ╚═╝     ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝      ╚═════╝ ╚══════╝╚══════╝╚══════╝
-	`)
-	
-	fmt.Println("			 \033[1mWelcome To FleaPulse\033[0m...\n")
-	fmt.Println("			 Type [ \033[1mman\033[0m ] to see a list of general commands.\n")
-	
+	welcomeMsg()
 	startRepl()
 }

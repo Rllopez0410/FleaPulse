@@ -1,5 +1,7 @@
 # FleaPulse
 
+**Current Version: v1.0.0**
+
 FleaPulse is a command-line application written in Go for analyzing Escape from Tarkov flea market pricing data and identifying potentially profitable trader flips.
 
 The program analyzes recorded flea market prices, calculates average minimum prices, and compares them against trader sell prices to identify potential profit opportunities.
@@ -329,9 +331,9 @@ The project uses HTTP requests to retrieve Tarkov data and Go structs to decode 
 
 ## Project Status
 
-FleaPulse is currently under development.
+FleaPulse v1.0 is the first stable release of the project.
 
-Features, commands, calculations, output formatting, and API behavior may change as development continues.
+Core development is complete, but FleaPulse will continue to receive new features, improvements, optimizations, and bug fixes over time.
 
 ---
 

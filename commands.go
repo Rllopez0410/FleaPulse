@@ -22,7 +22,7 @@ var commandRegistry = map[string]cliCommand {
 	"mode": {
 		name: 			"mode",
 		description:	"Checking mode...",
-		callback: 		checkMode,
+		callback: 		commandMode,
 	},
 
 	"rate": {
@@ -50,13 +50,13 @@ var commandRegistry = map[string]cliCommand {
 	},
 
 	"pulse": {
-    	name:        "pulse",
-    	description: "Scannning the flea market. This may take a few minutes...",
-    	callback:    priceSnapShot,
+    	name:        	"pulse",
+    	description: 	"Scannning the flea market. This may take a few minutes...",
+    	callback:    	priceSnapShot,
 	},
 
 	"man": {
-		name:		"man",
+		name:			"man",
 		description: 	
 		`
 			 Welcome to Tarkov FleaPulse. This program is designed to find potentially 
@@ -136,7 +136,7 @@ var commandRegistry = map[string]cliCommand {
 			 "Displays a manual of general commands for navigating and using the CLI."
 		`,
 
-		callback: commandMan,
+		callback: 	commandMan,
 	},
 }
 
@@ -158,6 +158,7 @@ func welcomeMsg() {
 	fmt.Println(`			 ╚═╝     ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝      ╚═════╝ ╚══════╝╚══════╝╚══════╝
 	`)
 	
+	fmt.Println("			 Current version: \033[1mv1.0.0\033[0m\n")
 	fmt.Println("			 \033[1mWelcome To FleaPulse\033[0m...\n")
 	fmt.Println("			 Type [ \033[1mman\033[0m ] to see a list of general commands.\n")
 }

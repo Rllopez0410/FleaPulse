@@ -23,6 +23,7 @@ type itemHistory struct {
 type goodItem struct {
 	profit		int
 	sellPrice	int
+	trader		string
 	name		string
 }
 
@@ -155,15 +156,6 @@ func collectFleaPrices() error {
 			data, err := io.ReadAll(res.Body)
 			res.Body.Close()
 
-			//but this data in the progress bar function
-			/*if res.StatusCode > 299 {
-    			fmt.Printf("FAILED: %s | %s | status: %d\n", itemName, itemId, res.StatusCode)
-				failCount++
-    			continue
-			} else {
-				fmt.Printf("SUCCESS: %s | %s | status: %d\n", itemName, itemId, res.StatusCode)
-			}*/
-
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -273,11 +265,11 @@ func calculateProfit() {
 			avgProfit = sellPrice - avgMinPrice
 
 			if avgProfit > 1000 {
-
 				var newGoodItem goodItem
 				newGoodItem.name = curItemName
 				newGoodItem.profit = avgProfit
 				newGoodItem.sellPrice = sellPrice
+				newGoodItem.trader = "Therapist"
 				profitibleItems = append(profitibleItems, newGoodItem)
 			} else {
 				continue

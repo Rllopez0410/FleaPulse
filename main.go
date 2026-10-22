@@ -15,7 +15,7 @@ import (
 	"time"
 )
 
-func checkMode() error {
+func commandMode() error {
 	timer := time.NewTicker(50*time.Millisecond)
 	defer timer.Stop()
 
@@ -58,21 +58,42 @@ func cleanInput(text string) []string {
 }
 
 func commandRate() error {
-	fmt.Printf("Current game mode: %s\n", mode)
-		fmt.Printf("Would like to change the mode: [y/n]")
+	timer := time.NewTicker(200*time.Millisecond)
+	defer timer.Stop()
+
+	for {
+		fmt.Printf("Current rate: %dms\n", rate)
+		<-timer.C
+		fmt.Printf("Would like to change the rate: [y/n]")
 		scanner := bufio.NewScanner(os.Stdin)
 		scanner.Scan()
-		rateInput := scanner.Text()
+		choice := scanner.Text()
 		scanner.Err()
+	
+		switch choice {
+			case "y":
+				<-timer.C
+				fmt.Print("Choose a rate in milliseconds: ")
+				scanner.Scan()
+				newRate := scanner.Text()
 
-		input, err := strconv.Atoi(rateInput)
-		if err != nil {
-			fmt.Println("Invalid input. Please try again...")
+				input, err := strconv.Atoi(newRate)
+				if err != nil {
+					fmt.Println("Invalid input. Please try again...")
+				}
+
+				rate = time.Duration(input)
+
+				fmt.Printf("Request Rate is now \033[1m%v\033[0m\n", newRate)
+				return nil
+			case "n":
+				<-timer.C
+				fmt.Printf("Rate unchanged...\n")
+				return nil
+			default:
+				fmt.Printf("Invalid choice... Please try again.\n")	
 		}
-
-		fmt.Printf("Request Rate is now \033[1%d\033[0m", input)
-
-		return nil
+	}
 }
 
 func commandKill() error {
@@ -115,7 +136,7 @@ func displayProfit() error {
 	})
 
 	for i := 0; i < len(profitibleItems); i++ {
-		fmt.Printf("Name: %s | Profit: %d | Sell Price: %d\n", profitibleItems[i].name, profitibleItems[i].profit, profitibleItems[i].sellPrice)
+		fmt.Printf("Name: %s | Profit: %d | Trader Sell Price: {%s / %d}\n", profitibleItems[i].name, profitibleItems[i].profit, profitibleItems[i].trader, profitibleItems[i].sellPrice)
 		<- timer.C
 	}
 

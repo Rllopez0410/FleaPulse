@@ -22,13 +22,9 @@ type itemHistory struct {
 
 type goodItem struct {
 	profit		int
+	sellPrice	int
 	name		string
-	/*add the selling price since everything is 
-	just a potential profit. This will let people
-	be aware of the threshold price*/
 }
-
-//create a function that'll sort most to least profitiable
 
 func addPrice(min int, name, t string) {
 	var newData priceRecord
@@ -125,8 +121,7 @@ func progressBar(current, total int) {
 }
 
 func collectFleaPrices() error {
-	//add a command that will change the rate of the ticker
-	timer := time.NewTicker(50*time.Millisecond)
+	timer := time.NewTicker(rate * time.Millisecond)
 	defer timer.Stop()
 
 	var requestMade int
@@ -231,7 +226,6 @@ func collectTraderData() error {
 	}
 
 	for _, trader := range traders.Data {
-    	
     	cachedTraders(trader)
 	}
 
@@ -279,9 +273,11 @@ func calculateProfit() {
 			avgProfit = sellPrice - avgMinPrice
 
 			if avgProfit > 1000 {
+
 				var newGoodItem goodItem
 				newGoodItem.name = curItemName
 				newGoodItem.profit = avgProfit
+				newGoodItem.sellPrice = sellPrice
 				profitibleItems = append(profitibleItems, newGoodItem)
 			} else {
 				continue

@@ -25,6 +25,12 @@ var commandRegistry = map[string]cliCommand {
 		callback: 		checkMode,
 	},
 
+	"rate": {
+		name:			"rate",
+		description: 	"Changing Get request rate...",
+		callback: 		commandRate,
+	},
+
 	"items": {
 		name: 			"items",
 		description:	"Searching for items...",
@@ -40,14 +46,14 @@ var commandRegistry = map[string]cliCommand {
 	"profits": {
 		name: 			"profits",
 		description: 	"Retrieving a list of potential profitable items...",
-		callback: 		profitResults,
+		callback: 		displayProfit,
 	},
 
 	"pulse": {
     	name:        "pulse",
     	description: "Scannning the flea market. This may take a few minutes...",
     	callback:    priceSnapShot,
-},
+	},
 
 	"man": {
 		name:		"man",
@@ -78,6 +84,14 @@ var commandRegistry = map[string]cliCommand {
 			 Description: 	
 			 "Displays the current game mode and allows you to change it."
  
+			 -------------------------------------------------------------------------
+
+			 Name:
+			 "rate"
+
+			 Description:
+			 "Displays and allows you to change the delay between flea market API requests."
+
 			 -------------------------------------------------------------------------
  
 			 Name:

@@ -1,6 +1,9 @@
 package main
 
 import (
+	"strconv"
+	"cmp"
+	"slices"
 	"bufio"
 	"encoding/json"
 	"fmt"
@@ -54,6 +57,24 @@ func cleanInput(text string) []string {
 	return wordArr
 }
 
+func commandRate() error {
+	fmt.Printf("Current game mode: %s\n", mode)
+		fmt.Printf("Would like to change the mode: [y/n]")
+		scanner := bufio.NewScanner(os.Stdin)
+		scanner.Scan()
+		rateInput := scanner.Text()
+		scanner.Err()
+
+		input, err := strconv.Atoi(rateInput)
+		if err != nil {
+			fmt.Println("Invalid input. Please try again...")
+		}
+
+		fmt.Printf("Request Rate is now \033[1%d\033[0m", input)
+
+		return nil
+}
+
 func commandKill() error {
 	fmt.Println("Closing the FleaScanner... Goodluck!")
 	os.Exit(0)
@@ -79,7 +100,7 @@ func priceSnapShot() error {
 	return nil
 }
 
-func profitResults() error {
+func displayProfit() error {
 	timer := time.NewTicker(50*time.Millisecond)
 	defer timer.Stop()
 
@@ -89,8 +110,12 @@ func profitResults() error {
 		return nil
 	}
 
+	slices.SortFunc(profitibleItems, func(a, b goodItem) int {
+    	return cmp.Compare(b.profit, a.profit)
+	})
+
 	for i := 0; i < len(profitibleItems); i++ {
-		fmt.Printf("Name: %s | Profit: %d\n", profitibleItems[i].name, profitibleItems[i].profit)
+		fmt.Printf("Name: %s | Profit: %d | Sell Price: %d\n", profitibleItems[i].name, profitibleItems[i].profit, profitibleItems[i].sellPrice)
 		<- timer.C
 	}
 

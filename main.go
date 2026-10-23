@@ -244,6 +244,10 @@ func startRepl() {
 		text := scanner.Text()
 		scanner.Err()
 		textSlice := cleanInput(text)
+		
+		if len(textSlice) == 0 {
+			continue
+		}
 
 		matchKey := false
 		for key := range commandRegistry {
@@ -257,7 +261,7 @@ func startRepl() {
 
 		if !matchKey {
 			fmt.Println("Unknown command")
-		}
+		} 
 	}
 }
 

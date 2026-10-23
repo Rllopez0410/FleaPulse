@@ -10,10 +10,88 @@ The program analyzes recorded flea market prices, calculates average minimum pri
 
 ---
 
+## Download
+
+FleaPulse v1.0.0 is available as a precompiled executable.
+
+You **do not need Go installed** to use a precompiled version.
+
+Go to the **Releases** section of this repository and download the appropriate version for your operating system:
+
+| Operating System | Download |
+| --- | --- |
+| Windows 64-bit | `FleaPulse-windows-amd64.exe` |
+| Linux 64-bit | `FleaPulse-linux-amd64` |
+| macOS Intel 64-bit | `FleaPulse-macos-amd64` |
+
+> **macOS:** The current macOS release is built for Intel (`amd64`) Macs.
+
+---
+
+## Running FleaPulse
+
+### Windows
+
+Download:
+
+```text
+FleaPulse-windows-amd64.exe
+```
+
+Open a terminal in the directory containing the executable and run:
+
+```powershell
+.\FleaPulse-windows-amd64.exe
+```
+
+### Linux
+
+Download:
+
+```text
+FleaPulse-linux-amd64
+```
+
+You may need to make the file executable:
+
+```bash
+chmod +x FleaPulse-linux-amd64
+```
+
+Then run:
+
+```bash
+./FleaPulse-linux-amd64
+```
+
+### macOS — Intel
+
+Download:
+
+```text
+FleaPulse-macos-amd64
+```
+
+You may need to make the file executable:
+
+```bash
+chmod +x FleaPulse-macos-amd64
+```
+
+Then run:
+
+```bash
+./FleaPulse-macos-amd64
+```
+
+> Your operating system may display a security warning because FleaPulse binaries are currently unsigned.
+
+---
+
 ## Features
 
 - Retrieve Escape from Tarkov item data
-- Retrieve historical flea market pricing data
+- Retrieve recorded flea market pricing data
 - Calculate average minimum flea market prices
 - Compare flea prices against trader sell prices
 - Identify potentially profitable trader flips
@@ -21,65 +99,6 @@ The program analyzes recorded flea market prices, calculates average minimum pri
 - Support multiple Tarkov game modes
 - Adjustable API request rate
 - Interactive command-line interface
-
----
-
-## Requirements
-
-To build FleaPulse from source, you will need:
-
-- [Go](https://go.dev/) installed on your system
-- An internet connection to retrieve Tarkov market data
-
-You can check that Go is installed with:
-
-```bash
-go version
-```
-
----
-
-## Installation
-
-Clone the repository:
-
-```bash
-git clone https://github.com/Rllopez0410/FleaPulse.git
-```
-
-Enter the project directory:
-
-```bash
-cd FleaPulse
-```
-
-Run FleaPulse:
-
-```bash
-go run .
-```
-
-Alternatively, build an executable:
-
-```bash
-go build
-```
-
-### Linux / macOS
-
-Run the compiled executable with:
-
-```bash
-./FleaPulse
-```
-
-### Windows
-
-Run the compiled executable with:
-
-```powershell
-.\FleaPulse.exe
-```
 
 ---
 
@@ -94,6 +113,8 @@ When FleaPulse starts, you will be presented with the command-line interface:
 ██╔══╝  ██║     ██╔══╝  ██╔══██║██╔═══╝ ██║   ██║██║     ╚════██║██╔══╝
 ██║     ███████╗███████╗██║  ██║██║     ╚██████╔╝███████╗███████║███████╗
 ╚═╝     ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝      ╚═════╝ ╚══════╝╚══════╝╚══════╝
+
+FleaPulse v1.0.0
 
 Welcome To FleaPulse...
 
@@ -120,8 +141,6 @@ Displays the FleaPulse manual and a list of general commands.
 Tarkov => man
 ```
 
----
-
 ### `pulse`
 
 Scans the flea market for pricing data, calculates the average minimum price of each item, and compares it to the item's trader sell price to identify potential profit opportunities.
@@ -131,8 +150,6 @@ Tarkov => pulse
 ```
 
 Depending on the configured request rate, a full scan may take some time to complete.
-
----
 
 ### `profits`
 
@@ -144,8 +161,6 @@ Tarkov => profits
 
 Run `pulse` before using this command so FleaPulse has pricing data to analyze.
 
----
-
 ### `items`
 
 Searches for essential information about each item, such as its ID, name, and type.
@@ -153,8 +168,6 @@ Searches for essential information about each item, such as its ID, name, and ty
 ```text
 Tarkov => items
 ```
-
----
 
 ### `flea`
 
@@ -164,8 +177,6 @@ Searches for a specified item and returns its pricing history.
 Tarkov => flea
 ```
 
----
-
 ### `mode`
 
 Displays the current game mode and allows you to change it.
@@ -174,15 +185,13 @@ Displays the current game mode and allows you to change it.
 Tarkov => mode
 ```
 
-Available game modes include:
+Available game modes:
 
 ```text
 pve
 regular
 pvp-season
 ```
-
----
 
 ### `rate`
 
@@ -192,7 +201,7 @@ Displays and allows you to change the API request rate in milliseconds.
 Tarkov => rate
 ```
 
-The request rate controls the delay between requests made while FleaPulse is retrieving pricing data.
+The request rate controls the delay between requests made while FleaPulse retrieves pricing data.
 
 For example:
 
@@ -201,13 +210,12 @@ For example:
 100ms
 250ms
 500ms
+1000ms
 ```
 
 A lower value results in requests being made more frequently, while a higher value increases the delay between requests.
 
-If requests begin failing or the API begins rate limiting requests, increasing the request rate may improve reliability.
-
----
+If FleaPulse encounters frequent network errors or API rate limiting, increasing the delay may improve reliability.
 
 ### `kill`
 
@@ -241,7 +249,7 @@ Tarkov => profits
 
 FleaPulse records flea market pricing data and calculates the average minimum flea market price for an item.
 
-That value is then compared against the item's trader sell price.
+That value is compared against the item's trader sell price.
 
 Conceptually:
 
@@ -257,13 +265,9 @@ Trader sell price:           52,000 RUB
 Potential profit:             7,000 RUB
 ```
 
-In this example, purchasing the item for approximately `45,000 RUB` and selling it to the trader for `52,000 RUB` would represent a potential profit of:
+In this example, purchasing the item for approximately `45,000 RUB` and selling it to the trader for `52,000 RUB` represents a potential profit of `7,000 RUB`.
 
-```text
-7,000 RUB
-```
-
-However, because FleaPulse analyzes recorded pricing data, the item may not currently be available at the calculated flea market price.
+Because FleaPulse analyzes recorded pricing data, the item may not currently be available at the calculated flea market price.
 
 ---
 
@@ -284,17 +288,17 @@ FleaPulse is intended to help identify items that may be worth:
 
 ## API Request Rate
 
-FleaPulse allows the delay between API requests to be adjusted.
+FleaPulse allows you to adjust the delay between API requests.
 
 This can be useful if network conditions or API availability change.
 
-For example, a request interval of:
+For example:
 
 ```text
 50ms
 ```
 
-allows requests to occur more frequently than:
+makes requests more frequently than:
 
 ```text
 500ms
@@ -302,7 +306,43 @@ allows requests to occur more frequently than:
 
 If FleaPulse encounters frequent network errors or rate limiting, increasing the delay between requests may help.
 
-Users should avoid placing unnecessary load on the API service.
+Please avoid placing unnecessary load on the API service.
+
+---
+
+## Building From Source
+
+If you prefer to build FleaPulse yourself, you will need Go installed.
+
+Check your Go installation:
+
+```bash
+go version
+```
+
+Clone the repository:
+
+```bash
+git clone https://github.com/Rllopez0410/FleaPulse.git
+```
+
+Enter the project directory:
+
+```bash
+cd FleaPulse
+```
+
+Run directly from source:
+
+```bash
+go run .
+```
+
+Or build the application:
+
+```bash
+go build
+```
 
 ---
 
@@ -318,22 +358,39 @@ FleaPulse is not affiliated with tarkov.dev, Battlestate Games, or Escape from T
 
 ## Built With
 
-FleaPulse is written primarily in:
+FleaPulse is written in **Go** and makes use of:
 
-- **Go**
-- Go standard library HTTP client
+- Go standard library HTTP functionality
 - JSON APIs
+- Go structs and collections
 - Command-line interface tools
-
-The project uses HTTP requests to retrieve Tarkov data and Go structs to decode and analyze the returned JSON.
 
 ---
 
 ## Project Status
 
-FleaPulse v1.0 is the first stable release of the project.
+**FleaPulse v1.0.0 is the first stable release of the project.**
 
 Core development is complete, but FleaPulse will continue to receive new features, improvements, optimizations, and bug fixes over time.
+
+---
+
+## Release History
+
+### v1.0.0
+
+First stable release of FleaPulse.
+
+Highlights include:
+
+- Flea market price scanning
+- Historical price analysis
+- Trader profit calculations
+- Profitable item discovery
+- Multiple game mode support
+- Configurable API request rate
+- Interactive CLI and built-in manual
+- Precompiled Windows, Linux, and Intel macOS releases
 
 ---
 

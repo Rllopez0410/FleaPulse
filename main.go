@@ -156,7 +156,7 @@ func fetchItemOnFlea() error {
 
 	res, err := http.Get("https://json.tarkov.dev/" + mode + "/prices/" + id)
 	if err != nil {
-		fmt.Println("Error: cannot connect to api")
+		fmt.Printf("Oops, something went wrong...\nError: %s\n", err)
 		return err
 	}
 
@@ -164,7 +164,7 @@ func fetchItemOnFlea() error {
 	data, err := io.ReadAll(res.Body)
 
 	if res.StatusCode > 299 {
-		log.Fatalf("Status Code %v", res.StatusCode)
+		fmt.Printf("Status Code %v\n", res.StatusCode)
 	}
 
 	if err != nil {
@@ -238,6 +238,8 @@ func startRepl() {
 
 	for {
 		fmt.Print("Tarkov => ")
+		/*write a condition that will prevent the program to terminate
+		if the user has no input*/ 
 		scanner.Scan()
 		text := scanner.Text()
 		scanner.Err()
@@ -260,6 +262,8 @@ func startRepl() {
 }
 
 func main() {
+	/*create a function that will track if the 2hr timer fires to let to user they
+	make another request that will also prevent them from making unnecessary requests*/
 	welcomeMsg()
 	startRepl()
 }

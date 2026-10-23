@@ -5,7 +5,6 @@ import (
 	"time"
 )
 
-
 type cliCommand struct {
 	name		string
 	description	string
@@ -13,6 +12,7 @@ type cliCommand struct {
 }
 
 var commandRegistry = map[string]cliCommand {
+	//create a command that will change the sample count for min prices
 	"kill": {
 		name:        	"kill",
 		description: 	"Exit the scanner.",

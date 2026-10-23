@@ -22,7 +22,7 @@ func commandMode() error {
 	for {
 		fmt.Printf("Current game mode: %s\n", mode)
 		<-timer.C
-		fmt.Printf("Would like to change the mode: [y/n]")
+		fmt.Printf("Would you like to change the mode: [y/n]")
 		scanner := bufio.NewScanner(os.Stdin)
 		scanner.Scan()
 		choice := scanner.Text()
@@ -191,7 +191,7 @@ func fetchItemsInfo() error {
 	defer timer.Stop()
 	res, err := http.Get("https://json.tarkov.dev/" + mode + "/items")
 	if err != nil {
-		fmt.Println("Error: Cannot connect to api")
+		fmt.Printf("Oops, something went wrong...\n Error: %s\n", err)
 		return err
 	}
 

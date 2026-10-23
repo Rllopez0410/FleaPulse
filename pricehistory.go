@@ -53,7 +53,7 @@ func addToMap() {
 func collectItemData() error {
 	res, err := http.Get("https://json.tarkov.dev/" + mode + "/items")
 	if err != nil {
-		fmt.Println("Error: Cannot connect to api")
+		fmt.Printf("Oops, something went wrong...\n Error: %s\n", err)
 		return err
 	}
 
@@ -200,7 +200,7 @@ func collectFleaPrices() error {
 func collectTraderData() error {
 	res, err := http.Get("https://json.tarkov.dev/" + mode + "/traders")
 	if err != nil {
-		fmt.Println("Error: cannot connect to api")
+		fmt.Printf("Oops, something went wrong...\n Error: %s\n", err)
 		return err
 	}
 	defer res.Body.Close()
@@ -278,5 +278,5 @@ func calculateProfit() {
 	} 
 
 	<-timer.C
-	fmt.Println("Calculation completed!")
+	fmt.Println("Calculations completed!")
 }

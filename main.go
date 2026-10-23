@@ -238,8 +238,6 @@ func startRepl() {
 
 	for {
 		fmt.Print("Tarkov => ")
-		/*write a condition that will prevent the program to terminate
-		if the user has no input*/ 
 		scanner.Scan()
 		text := scanner.Text()
 		scanner.Err()

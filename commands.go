@@ -71,7 +71,7 @@ the flea marke
 General Command:
 
 	Name:
-		"kil
+		"kill"
 
 	Description: 	
 		"Terminate the program"

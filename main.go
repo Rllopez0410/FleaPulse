@@ -15,6 +15,8 @@ import (
 	"time"
 )
 
+//add config command that displays all configurable settings
+
 func commandMode() error {
 	timer := time.NewTicker(50*time.Millisecond)
 	defer timer.Stop()
@@ -136,7 +138,7 @@ func displayProfit() error {
 	})
 
 	for i := 0; i < len(profitibleItems); i++ {
-		fmt.Printf("Name: %s | Profit: %d | Trader Sell Price: {%s / %d}\n", profitibleItems[i].name, profitibleItems[i].profit, profitibleItems[i].trader, profitibleItems[i].sellPrice)
+		fmt.Printf("Name: %s	|	Profit: %d	|	Trader Sell Price: {%s / %d}\n", profitibleItems[i].name, profitibleItems[i].profit, profitibleItems[i].trader, profitibleItems[i].sellPrice)
 		<- timer.C
 	}
 

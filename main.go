@@ -1,16 +1,16 @@
 package main
 
 import (
-	"strconv"
-	"cmp"
-	"slices"
 	"bufio"
+	"cmp"
 	"encoding/json"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"os"
+	"slices"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -18,7 +18,7 @@ import (
 //add config command that displays all configurable settings
 
 func commandMode() error {
-	timer := time.NewTicker(50*time.Millisecond)
+	timer := time.NewTicker(50 * time.Millisecond)
 	defer timer.Stop()
 
 	for {
@@ -29,27 +29,27 @@ func commandMode() error {
 		scanner.Scan()
 		choice := scanner.Text()
 		scanner.Err()
-	
-		switch choice {
-			case "y":
-				<-timer.C
-				fmt.Print("Choose mode [pve/regular/pvp-season]: ")
-				scanner.Scan()
-				newMode := scanner.Text()
 
-				if newMode != "pve" && newMode != "regular" && newMode != "pvp-season" {
-					fmt.Printf("Invalid mode... Please try again.\n")
-				} else {
-					<-timer.C
-					fmt.Printf("Mode switched to \033[1m%s\033[0m...\n", newMode)
-					return nil
-				}
-			case "n":
+		switch choice {
+		case "y":
+			<-timer.C
+			fmt.Print("Choose mode [pve/regular/pvp-season]: ")
+			scanner.Scan()
+			newMode := scanner.Text()
+
+			if newMode != "pve" && newMode != "regular" && newMode != "pvp-season" {
+				fmt.Printf("Invalid mode... Please try again.\n")
+			} else {
 				<-timer.C
-				fmt.Printf("Mode unchanged...\n")
+				fmt.Printf("Mode switched to \033[1m%s\033[0m...\n", newMode)
 				return nil
-			default:
-				fmt.Printf("Invalid choice... Please try again.\n")	
+			}
+		case "n":
+			<-timer.C
+			fmt.Printf("Mode unchanged...\n")
+			return nil
+		default:
+			fmt.Printf("Invalid choice... Please try again.\n")
 		}
 	}
 }
@@ -60,7 +60,7 @@ func cleanInput(text string) []string {
 }
 
 func commandRate() error {
-	timer := time.NewTicker(200*time.Millisecond)
+	timer := time.NewTicker(200 * time.Millisecond)
 	defer timer.Stop()
 
 	for {
@@ -71,29 +71,29 @@ func commandRate() error {
 		scanner.Scan()
 		choice := scanner.Text()
 		scanner.Err()
-	
+
 		switch choice {
-			case "y":
-				<-timer.C
-				fmt.Print("Choose a rate in milliseconds: ")
-				scanner.Scan()
-				newRate := scanner.Text()
+		case "y":
+			<-timer.C
+			fmt.Print("Choose a rate in milliseconds: ")
+			scanner.Scan()
+			newRate := scanner.Text()
 
-				input, err := strconv.Atoi(newRate)
-				if err != nil {
-					fmt.Println("Invalid input. Please try again...")
-				}
+			input, err := strconv.Atoi(newRate)
+			if err != nil {
+				fmt.Println("Invalid input. Please try again...")
+			}
 
-				rate = time.Duration(input)
+			rate = time.Duration(input)
 
-				fmt.Printf("Request Rate is now \033[1m%v\033[0m\n", newRate)
-				return nil
-			case "n":
-				<-timer.C
-				fmt.Printf("Rate unchanged...\n")
-				return nil
-			default:
-				fmt.Printf("Invalid choice... Please try again.\n")	
+			fmt.Printf("Request Rate is now \033[1m%v\033[0m\n", newRate)
+			return nil
+		case "n":
+			<-timer.C
+			fmt.Printf("Rate unchanged...\n")
+			return nil
+		default:
+			fmt.Printf("Invalid choice... Please try again.\n")
 		}
 	}
 }
@@ -105,6 +105,14 @@ func commandKill() error {
 }
 
 func commandMan() error {
+	return nil
+}
+
+func commandConfig() error {
+	fmt.Println("Configurations:")
+	fmt.Printf("	Mode: %s\n", mode)
+	fmt.Printf("	Rate: %v\n", rate)
+
 	return nil
 }
 
@@ -123,8 +131,8 @@ func priceSnapShot() error {
 	return nil
 }
 
-func displayProfit() error {
-	timer := time.NewTicker(50*time.Millisecond)
+func commandProfits() error {
+	timer := time.NewTicker(50 * time.Millisecond)
 	defer timer.Stop()
 
 	if len(profitibleItems) == 0 {
@@ -134,19 +142,19 @@ func displayProfit() error {
 	}
 
 	slices.SortFunc(profitibleItems, func(a, b goodItem) int {
-    	return cmp.Compare(b.profit, a.profit)
+		return cmp.Compare(b.profit, a.profit)
 	})
 
 	for i := 0; i < len(profitibleItems); i++ {
-		fmt.Printf("Name: %s	|	Profit: %d	|	Trader Sell Price: {%s / %d}\n", profitibleItems[i].name, profitibleItems[i].profit, profitibleItems[i].trader, profitibleItems[i].sellPrice)
-		<- timer.C
+		fmt.Printf("Name: %s | Profit: %d | Trader Sell Price: {%s / %d}\n", profitibleItems[i].name, profitibleItems[i].profit, profitibleItems[i].trader, profitibleItems[i].sellPrice)
+		<-timer.C
 	}
 
 	return nil
 }
 
 func fetchItemOnFlea() error {
-	timer := time.NewTicker(15*time.Millisecond)
+	timer := time.NewTicker(15 * time.Millisecond)
 	defer timer.Stop()
 
 	fmt.Printf("Insert Item ID => ")
@@ -189,7 +197,7 @@ func fetchItemOnFlea() error {
 }
 
 func fetchItemsInfo() error {
-	timer := time.NewTicker(2*time.Millisecond)
+	timer := time.NewTicker(2 * time.Millisecond)
 	defer timer.Stop()
 	res, err := http.Get("https://json.tarkov.dev/" + mode + "/items")
 	if err != nil {
@@ -229,7 +237,7 @@ func fetchItemsInfo() error {
 
 		<-timer.C
 	}
-	
+
 	fmt.Printf("Items found: %d\n", itemCount)
 
 	return nil
@@ -244,7 +252,7 @@ func startRepl() {
 		text := scanner.Text()
 		scanner.Err()
 		textSlice := cleanInput(text)
-		
+
 		if len(textSlice) == 0 {
 			continue
 		}
@@ -261,7 +269,7 @@ func startRepl() {
 
 		if !matchKey {
 			fmt.Println("Unknown command")
-		} 
+		}
 	}
 }
 

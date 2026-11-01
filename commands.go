@@ -19,6 +19,12 @@ var commandRegistry = map[string]cliCommand {
 		callback:    	commandKill,
 	},
 
+	"config": {
+		name:			"config",
+		description: 	"Current configurable settings.",
+		callback: 		commandConfig,
+	},
+
 	"mode": {
 		name: 			"mode",
 		description:	"Checking mode...",
@@ -46,7 +52,7 @@ var commandRegistry = map[string]cliCommand {
 	"profits": {
 		name: 			"profits",
 		description: 	"Retrieving a list of potential profitable items...",
-		callback: 		displayProfit,
+		callback: 		commandProfits,
 	},
 
 	"pulse": {

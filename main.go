@@ -153,7 +153,7 @@ func commandProfits() error {
 	return nil
 }
 
-func fetchItemOnFlea() error {
+func commandFlea() error {
 	timer := time.NewTicker(15 * time.Millisecond)
 	defer timer.Stop()
 
@@ -196,7 +196,7 @@ func fetchItemOnFlea() error {
 	return nil
 }
 
-func fetchItemsInfo() error {
+func commandItems() error {
 	timer := time.NewTicker(2 * time.Millisecond)
 	defer timer.Stop()
 	res, err := http.Get("https://json.tarkov.dev/" + mode + "/items")

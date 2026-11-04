@@ -40,13 +40,13 @@ var commandRegistry = map[string]cliCommand {
 	"items": {
 		name: 			"items",
 		description:	"Searching for items...",
-		callback: 		fetchItemsInfo,
+		callback: 		commandItems,
 	},
 
 	"flea": {
 		name: 			"flea",
 		description: 	"Searching for specified item on the flea...",
-		callback: 		fetchItemOnFlea,
+		callback: 		commandFlea,
 	},
 
 	"profits": {

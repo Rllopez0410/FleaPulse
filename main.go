@@ -15,8 +15,6 @@ import (
 	"time"
 )
 
-//add config command that displays all configurable settings
-
 func commandMode() error {
 	timer := time.NewTicker(50 * time.Millisecond)
 	defer timer.Stop()

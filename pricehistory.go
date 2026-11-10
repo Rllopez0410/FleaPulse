@@ -244,7 +244,7 @@ func calculateProfit() {
 				sumOfPrices += priceStruct.minPrice
 				priceCount++
 			}
-
+			//modify function to output trader with the highest sellPrice
 			for _, v := range item_cache.cachedItems {
 				if v.Name == curItemName {
 					for i := 0; i < len(v.SellToTrader); i++ {

@@ -15,6 +15,8 @@ import (
 	"time"
 )
 
+//add a filter command to filter out item types
+
 func commandMode() error {
 	timer := time.NewTicker(50 * time.Millisecond)
 	defer timer.Stop()

@@ -274,6 +274,18 @@ func startRepl() {
 }
 
 func main() {
+	db, err := initDB()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer db.Close()
+
+	if err := db.Ping(); err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Database connection successful!")
 	/*create a function that will track if the 2hr timer fires to let to user they
 	make another request that will also prevent them from making unnecessary requests*/
 	welcomeMsg()

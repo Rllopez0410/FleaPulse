@@ -285,6 +285,10 @@ func main() {
 		log.Fatal(err)
 	}
 
+	if err := createTable(db); err != nil {
+		log.Fatal(err)
+	}
+
 	fmt.Println("Database connection successful!")
 	/*create a function that will track if the 2hr timer fires to let to user they
 	make another request that will also prevent them from making unnecessary requests*/

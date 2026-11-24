@@ -34,7 +34,8 @@ func insertItemDB(id, name string, db *sql.DB) error {
 		INSERT into 
 			items (id, name)
 		VALUES
-			(?, ?);
+			(?, ?)
+		ON CONFLICT(id) DO UPDATE SET name = excluded.name;
 	`
 	_, err := db.Exec(query, id, name)
 	if err != nil {
@@ -43,3 +44,4 @@ func insertItemDB(id, name string, db *sql.DB) error {
 
 	return nil
 }
+

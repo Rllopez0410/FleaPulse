@@ -117,8 +117,13 @@ func commandConfig() error {
 }
 
 func priceSnapShot() error {
+	db, err := initDB()
+	if err != nil {
+		return err
+	}
+
 	if len(item_cache.cachedItems) == 0 {
-		collectItemData()
+		collectItemData(db)
 	}
 
 	if len(trader_cache.cachedTraders) == 0 {

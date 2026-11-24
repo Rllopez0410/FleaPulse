@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strings"
 	"time"
+	"database/sql"
 )
 
 type priceRecord struct {
@@ -50,7 +51,7 @@ func addToMap() {
 	priceMap[day] = append(priceMap[day], dataForDay...)
 }
 
-func collectItemData() error {
+func collectItemData(db *sql.DB) error {
 	res, err := http.Get("https://json.tarkov.dev/" + mode + "/items")
 	if err != nil {
 		fmt.Printf("Oops, something went wrong...\n Error: %s\n", err)
@@ -95,6 +96,11 @@ func collectItemData() error {
 	    }
 
 		item.Name = strings.ReplaceAll(item.Name, "-", " ")
+
+		err := insertItemDB(item.ID, item.Name, db)
+    	if err != nil {
+        	return err
+    	}
 
 	    cacheItem(item)
 	}
